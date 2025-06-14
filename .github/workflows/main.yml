@@ -1,43 +1,37 @@
 name: Build APK for Android
 
 on:
-  push:
-    branches: [main]
+  push: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    # 1) جلب الكود
     - uses: actions/checkout@v4
 
-    # 2) إعداد بايثون 3.11 (حتى تعمل distutils مع Buildozer)
     - uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      with: { python-version: "3.11" }
 
-    # 3) حزم النظام الضرورية
-    - name: Install system deps
+    - name: System deps
       run: |
         sudo apt update
         sudo apt install -y openjdk-17-jdk zip unzip lib32stdc++6
 
-    # 4) تثبيت Buildozer داخل $HOME/.local/bin
     - name: Install Buildozer
       run: |
         pip install --upgrade pip
         pip install --user "setuptools<70" cython buildozer
-        echo "$HOME/.local/bin" >> $GITHUB_PATH   # كي يرى GitHub مسار buildozer
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    # 5) بناء الـAPK
+    # Buildozer سيقبل الرخص تلقائياً لأننا أضفنا
+    # android.accept_sdk_license = True في buildozer.spec
     - name: Build APK
+      env:
+        P4A_ACCEPT_SDK_LICENSE: "y"
       run: buildozer android debug
 
-    # 6) رفع الـAPK كأرتيفاكت
     - uses: actions/upload-artifact@v4
       with:
         name: SSHServer-APK
         path: bin/*.apk
-        if-no-files-found: error      # يعطى فشلًا واضحًا لو لم يُنتَج apk
