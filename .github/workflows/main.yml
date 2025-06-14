@@ -1,10 +1,10 @@
-name: Build APK
+name: Build APK for Android
 
 on:
   push:
     branches:
       - main
-
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,23 +12,25 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11"
 
     - name: Install dependencies
       run: |
-        pip install buildozer
+        sudo apt update && sudo apt install -y python3-pip openjdk-17-jdk zip unzip
+        pip install --upgrade pip
+        pip install --user buildozer
 
     - name: Build APK
       run: |
         buildozer android debug
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: SSHServer-APK
         path: bin/*.apk
