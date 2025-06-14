@@ -34,6 +34,9 @@ android.archs          = arm64-v8a, armeabi-v7a
 android.private_storage = True
 android.allow_backup    = False
 
+# قبول اتفاقية رخصة Android SDK تلقائيًا (تجنّب توقف GitHub Actions)
+android.accept_sdk_license = True
+
 # نوع المخرجات التي تريدها
 android.release_artifact = apk
 android.debug_artifact   = apk
