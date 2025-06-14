@@ -31,11 +31,14 @@ jobs:
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Accept Android SDK licenses
-      run: yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses || true
+      run: yes | $ANDROIDSDK/tools/bin/sdkmanager --licenses || true
+      env:
+        ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
 
     - name: Build APK
       env:
         P4A_ACCEPT_SDK_LICENSE: "y"
+        ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
       run: buildozer android debug
 
     - name: Upload APK
