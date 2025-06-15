@@ -22,7 +22,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y openjdk-17-jdk zip unzip lib32stdc++6
+        sudo apt install -y openjdk-17-jdk zip unzip lib32stdc++6 ant
 
     - name: Install Buildozer
       run: |
@@ -30,7 +30,7 @@ jobs:
         pip install --user "setuptools<70" cython buildozer
         echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-    - name: Build APK (with license auto-accept)
+    - name: Prepare Android licenses and build
       run: |
         mkdir -p "$HOME/.android"
         echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$HOME/.android/repositories.cfg"
